@@ -127,8 +127,8 @@ flowchart TD
 ## Final Tips
 
 One difficult case can happen when the user asks you to rerender the last
-diagram and says the modified it. In that case, you should access the "code"
-directory, where the code for the diagrams are stored using uuid7 labeled files.
-If they say "rerender last diagram", find the file in the "code" dir, and use a
-dedicated tool to rerun the diagram generation with that filename.
-DO NOT read the file, there is no need for that.
+diagram and says the modified it. In that case, you should access the
+"./diagrams/code" directory, where the code for the diagrams are stored using
+uuid7 labeled files. Find the file in that directory, and use a dedicated tool
+to rerun the diagram generation with that filename. DO NOT read the file, there
+is no need for that.
