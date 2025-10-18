@@ -1,0 +1,13 @@
+[project]
+name = "project-assistant"
+version = "0.1.0"
+description = "Project dedicated to maintaining the code for a project agentic assistant."
+readme = {file = "README.md", content-type = "text/markdown", optional = true}
+requires-python = ">=3.13"
+dependencies = [
+    "diagrams>=0.24.4",
+    "fast-agent-mcp>=0.2.58",
+]
+
+[project.scripts]
+project-assistant = "project_assistant:main"

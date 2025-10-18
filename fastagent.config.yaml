@@ -1,0 +1,48 @@
+# FastAgent Configuration File
+
+default_model: gpt-4.1
+# mcp-ui support: disabled, enabled or auto. "auto" opens the web browser on the asset automatically
+# mcp_ui_output_dir: ".fast-agent/ui"  # Where to write MCP-UI HTML files (relative to CWD if not absolute)
+# mcp_ui_mode: enabled
+
+# Logging and Console Configuration:
+logger:
+  # level: "debug" | "info" | "warning" | "error"
+  # type: "none" | "console" | "file" | "http"
+  # path: "/path/to/logfile.jsonl"
+
+  # Switch the progress display on or off
+  progress_display: true
+
+  # Show chat User/Assistant messages on the console
+  show_chat: true
+  # Show tool calls on the console
+  show_tools: true
+  # Truncate long tool responses on the console
+  truncate_tools: false
+
+# MCP Servers
+mcp:
+  servers:
+    fetch:
+      command: "uvx"
+      args: ["mcp-server-fetch"]
+    filesystem:
+      command: "npx"
+      args: ["-y", "@modelcontextprotocol/server-filesystem", "."]
+    diagramming:
+      transport: http
+      url: http://localhost:8000/mcp
+      auth:
+        oauth: true
+    presentation:
+      command: "uvx"
+      args: ["--from", "office-powerpoint-mcp-server", "ppt_mcp_server"]
+      env:
+        PPT_TEMPLATE_PATH: "./"
+    github_official:
+      transport: "http"
+      url: "https://api.githubcopilot.com/mcp/"
+    github_direct_api:
+      command: "uv"
+      args: ["run", "src/project_assistant/github_server.py"]

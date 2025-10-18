@@ -1,0 +1,43 @@
+# Stage 1: Build Node.js dependencies
+FROM node:20-slim AS node-builder
+WORKDIR /app
+RUN npm init -y && \
+    npm pkg set type=module && \
+    npm install @mermaid-js/mermaid-cli
+COPY src/project_assistant/mermaid_script.js ./scripts/
+
+# Stage 2: Build Python dependencies
+FROM python:3.13-slim AS python-builder
+WORKDIR /app
+
+RUN pip install --no-cache-dir uv
+COPY pyproject.toml uv.lock ./
+RUN uv sync --no-dev
+COPY src/ ./src/
+
+# Stage 3: Final lean image
+FROM python:3.13-slim
+WORKDIR /app
+
+# Install runtime dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs chromium graphviz && \
+    apt-get purge -y gnupg && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy dependencies from builder stages
+COPY --from=node-builder /app /app
+COPY --from=python-builder /app/.venv ./.venv
+
+# Copy application code
+COPY src/project_assistant/*.py ./src/project_assistant/
+
+ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium"
+
+# Set PATH to use the virtual environment
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Set the default command
+CMD ["python", "/app/src/project_assistant/diagramming_server.py"]

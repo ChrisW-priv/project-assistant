@@ -1,0 +1,12 @@
+services:
+  diagramming-server:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: ./Dockerfile_diagramming
+    image: diagramming-server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./diagrams/data:/app/data
+      - ./diagrams/code:/app/code
